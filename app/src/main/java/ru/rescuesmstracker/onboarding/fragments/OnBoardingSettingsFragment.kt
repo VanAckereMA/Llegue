@@ -20,20 +20,30 @@
 package ru.rescuesmstracker.onboarding.fragments
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import kotlinx.android.synthetic.main.v_main_settings.*
+import android.view.ViewGroup
 import ru.rescuesmstracker.settings.MainSettingsController
-import ru.rst.rescuesmstracker.R
+import ru.rst.rescuesmstracker.databinding.FOnboardingSettingsBinding
 
 class OnBoardingSettingsFragment : BaseOnBoardingFragment() {
 
-    override fun getLayoutRes(): Int = R.layout.f_onboarding_settings
+    private lateinit var binding: FOnboardingSettingsBinding
+
+    override fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup) {
+        binding = FOnboardingSettingsBinding.inflate(inflater, container, true)
+    }
 
     private lateinit var mainSettingsController: MainSettingsController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainSettingsController = MainSettingsController(requireActivity(), pref_interval, pref_max_sms_count, pref_coords_format)
+        mainSettingsController = MainSettingsController(
+            activity = requireActivity(),
+            pref_interval = binding.mainSettings.prefInterval,
+            pref_max_sms_count = binding.mainSettings.prefMaxSmsCount,
+            pref_coords_format = binding.mainSettings.prefCoordsFormat
+        )
         mainSettingsController.initViews()
     }
 }

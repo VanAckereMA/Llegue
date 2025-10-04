@@ -19,9 +19,13 @@
 
 package ru.rescuesmstracker.onboarding.fragments
 
-import ru.rst.rescuesmstracker.R
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import ru.rst.rescuesmstracker.databinding.FWelcomeScreenBinding
 
 class WelcomeFragment : BaseOnBoardingFragment() {
 
-    override fun getLayoutRes(): Int = R.layout.f_welcome_screen
+    override fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup) {
+        FWelcomeScreenBinding.inflate(layoutInflater, container, true)
+    }
 }

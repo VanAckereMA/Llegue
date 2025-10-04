@@ -41,10 +41,10 @@ class OnBoardingActivity : BaseRSTActivity(), IOnBoardingView {
         controller = OnBoardingController(this, this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (screen != null) {
-            outState?.putString("screen", screen!!.name)
+            outState.putString("screen", screen!!.name)
         }
     }
 

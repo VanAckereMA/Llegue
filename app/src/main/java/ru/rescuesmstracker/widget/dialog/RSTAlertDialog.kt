@@ -26,8 +26,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import kotlinx.android.synthetic.main.v_rst_dialog.*
-import ru.rst.rescuesmstracker.R
+import ru.rst.rescuesmstracker.databinding.VRstDialogBinding
 
 class RSTAlertDialog : DialogFragment() {
 
@@ -43,36 +42,38 @@ class RSTAlertDialog : DialogFragment() {
         set(value) {
             field = value
             if (isViewInflated) {
-                container_rst_dialog.removeAllViews()
+                binding.containerRstDialog.removeAllViews()
                 if (value == null) {
-                    container_rst_dialog.visibility = View.GONE
+                    binding.containerRstDialog.visibility = View.GONE
                 } else {
-                    value.inflateView(container_rst_dialog)
-                    container_rst_dialog.visibility = View.VISIBLE
+                    value.inflateView(binding.containerRstDialog)
+                    binding.containerRstDialog.visibility = View.VISIBLE
                 }
             }
         }
     var onOkListener: View.OnClickListener? = null
     var onCancelListener: View.OnClickListener? = null
     var dismissOnCancel = true
+
     /**
      * pass null to hide the button and empty string to use the default value
      */
     var cancelText: CharSequence? = ""
         set(value) {
             if (isViewInflated) {
-                text_rst_dialog_cancel.text = value
+                binding.textRstDialogCancel.text = value
             }
             field = value
         }
     var dismissOnOk = true
+
     /**
      * pass null to hide the button and empty string to use the default value
      */
     var okText: CharSequence? = ""
         set(value) {
             if (isViewInflated) {
-                text_rst_dialog_ok.text = value
+                binding.textRstDialogOk.text = value
             }
             field = value
         }
@@ -80,45 +81,51 @@ class RSTAlertDialog : DialogFragment() {
         set(value) {
             field = value
             if (isViewInflated) {
-                text_rst_dialog_ok.isEnabled = value
+                binding.textRstDialogOk.isEnabled = value
             }
         }
     private var isViewInflated = false
+    private lateinit var binding: VRstDialogBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.v_rst_dialog, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = VRstDialogBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        text_rst_dialog_ok.visibility = if (okText != null) View.VISIBLE else View.GONE
-        text_rst_dialog_ok.setOnClickListener {
+        binding.textRstDialogOk.visibility = if (okText != null) View.VISIBLE else View.GONE
+        binding.textRstDialogOk.setOnClickListener {
             if (dismissOnOk) {
                 dismiss()
             }
-            onOkListener?.onClick(text_rst_dialog_ok)
+            onOkListener?.onClick(binding.textRstDialogOk)
         }
         if (!okText.isNullOrEmpty()) {
-            text_rst_dialog_ok.text = okText
+            binding.textRstDialogOk.text = okText
         }
         okEnabled = true
 
-        text_rst_dialog_cancel.visibility = if (cancelText != null) View.VISIBLE else View.GONE
-        text_rst_dialog_cancel.setOnClickListener {
+        binding.textRstDialogCancel.visibility = if (cancelText != null) View.VISIBLE else View.GONE
+        binding.textRstDialogCancel.setOnClickListener {
             if (dismissOnCancel) {
                 dismiss()
             }
-            onCancelListener?.onClick(text_rst_dialog_cancel)
+            onCancelListener?.onClick(binding.textRstDialogCancel)
         }
         if (!cancelText.isNullOrEmpty()) {
-            text_rst_dialog_cancel.text = cancelText
+            binding.textRstDialogCancel.text = cancelText
         }
 
-        text_rst_dialog_title.text = arguments?.getCharSequence("title", "")
+        binding.textRstDialogTitle.text = arguments?.getCharSequence("title", "")
 
-        this.dialogMode?.inflateView(container_rst_dialog)
-        container_rst_dialog.visibility = if (dialogMode == null) View.GONE else View.VISIBLE
+        this.dialogMode?.inflateView(binding.containerRstDialog)
+        binding.containerRstDialog.visibility = if (dialogMode == null) View.GONE else View.VISIBLE
         isViewInflated = true
     }
 
@@ -131,7 +138,7 @@ class RSTAlertDialog : DialogFragment() {
     fun setTitle(title: CharSequence): RSTAlertDialog {
         arguments?.putCharSequence("title", title)
         if (isViewInflated) {
-            text_rst_dialog_title.text = title
+            binding.textRstDialogTitle.text = title
         }
         return this
     }

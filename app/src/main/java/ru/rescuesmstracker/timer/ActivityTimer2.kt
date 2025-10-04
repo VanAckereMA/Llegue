@@ -22,11 +22,6 @@ package ru.rescuesmstracker.timer
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import kotlinx.android.synthetic.main.a_timer_2.*
-import kotlinx.android.synthetic.main.content_disabled.*
-import kotlinx.android.synthetic.main.content_enabled.*
-import kotlinx.android.synthetic.main.content_enabled.locationStatusBar
-import kotlinx.android.synthetic.main.content_enabled.rstTimer
 import ru.rescuesmstracker.data.Contact
 import ru.rescuesmstracker.data.Sms
 import ru.rescuesmstracker.location.LocationProvider
@@ -34,40 +29,43 @@ import ru.rescuesmstracker.settings.ActivitySettings
 import ru.rescuesmstracker.widget.BaseRSTActivity
 import ru.rescuesmstracker.widget.LocationStatusBar
 import ru.rescuesmstracker.widget.RSTTimerView
-import ru.rst.rescuesmstracker.R
+import ru.rst.rescuesmstracker.databinding.ATimer2Binding
 
 class ActivityTimer2 : BaseRSTActivity(), TimerView2 {
+
+    private lateinit var binding: ATimer2Binding
 
     private lateinit var presenter: TimerPresenter2
 
     override fun createActivity(savedInstanceState: Bundle?) {
         super.createActivity(savedInstanceState)
 
-        setContentView(R.layout.a_timer_2)
+        binding = ATimer2Binding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initDisabledView()
         initEnabledView()
 
         presenter = TimerPresenterImpl(this, this)
 
-        switchbutton_main.setOnCheckedChangeListener { _, enabled ->
+        binding.switchbuttonMain.setOnCheckedChangeListener { _, enabled ->
             presenter.enabled = enabled
         }
 
-        rstTimer.setOnClickListener {
+        binding.contentEnabled.rstTimer.setOnClickListener {
             presenter.toggleSmsSending()
         }
-        rstTimer.getUpdate = {
-            presenter.getTimerUpdate(rstTimer.max)
+        binding.contentEnabled.rstTimer.getUpdate = {
+            presenter.getTimerUpdate(binding.contentEnabled.rstTimer.max)
         }
 
-        locationStatusBar.setOnClickListener {
-            if (locationStatusBar.status == LocationStatusBar.Status.LOCATION_DISABLED) {
+        binding.contentEnabled.locationStatusBar.setOnClickListener {
+            if (binding.contentEnabled.locationStatusBar.status == LocationStatusBar.Status.LOCATION_DISABLED) {
                 LocationProvider.requestLocationEnabling(this@ActivityTimer2)
             }
         }
 
-        force_send_btn.setOnClickListener {
+        binding.contentEnabled.forceSendBtn.setOnClickListener {
             presenter.forceSendSms()
         }
     }
@@ -83,59 +81,59 @@ class ActivityTimer2 : BaseRSTActivity(), TimerView2 {
     }
 
     override fun showEnabled() {
-        content_disabled.visibility = View.INVISIBLE
-        content_enabled.visibility = View.VISIBLE
-        switchbutton_main.setCheckedImmediatelyNoEvent(true)
+        binding.contentDisabled.root.visibility = View.INVISIBLE
+        binding.contentEnabled.root.visibility = View.VISIBLE
+        binding.switchbuttonMain.setCheckedImmediatelyNoEvent(true)
     }
 
     override fun showDisabled() {
-        content_disabled.visibility = View.VISIBLE
-        content_enabled.visibility = View.INVISIBLE
-        switchbutton_main.setCheckedImmediatelyNoEvent(false)
+        binding.contentDisabled.root.visibility = View.VISIBLE
+        binding.contentEnabled.root.visibility = View.INVISIBLE
+        binding.switchbuttonMain.setCheckedImmediatelyNoEvent(false)
     }
 
     override fun onGotData(status: RSTTimerView.State, lastSmsSentTimestamp: Long, progress: Float) {
-        rstTimer.progress = progress
-        rstTimer.setState(status, lastSmsSentTimestamp)
+        binding.contentEnabled.rstTimer.progress = progress
+        binding.contentEnabled.rstTimer.setState(status, lastSmsSentTimestamp)
     }
 
     override fun onUpdateStatus(accuracy: Float, isLocationEnabled: Boolean) {
-        locationStatusBar.onUpdateStatus(accuracy, isLocationEnabled)
+        binding.contentEnabled.locationStatusBar.onUpdateStatus(accuracy, isLocationEnabled)
     }
 
     override fun startTimer() {
-        rstTimer.start()
-        play_btn.playing = true
+        binding.contentEnabled.rstTimer.start()
+        binding.contentEnabled.playBtn.playing = true
     }
 
     override fun stopTimer() {
-        rstTimer.stop()
-        play_btn.playing = false
+        binding.contentEnabled.rstTimer.stop()
+        binding.contentEnabled.playBtn.playing = false
     }
 
     override fun setContact(contact: Contact?) {
-        contact_view.setContact(contact)
-        force_send_container.visibility = if (contact == null) View.INVISIBLE else force_send_btn.visibility
+        binding.contentEnabled.contactView.setContact(contact)
+        binding.contentEnabled.forceSendContainer.visibility = if (contact == null) View.INVISIBLE else binding.contentEnabled.forceSendBtn.visibility
     }
 
     override fun forceSmsSendingStatusUpdated(status: Sms.Status) {
         if (status == Sms.Status.SENDING) {
-            force_send_btn.visibility = View.INVISIBLE
-            force_send_progress.visibility = View.VISIBLE
+            binding.contentEnabled.forceSendBtn.visibility = View.INVISIBLE
+            binding.contentEnabled.forceSendProgress.visibility = View.VISIBLE
         } else {
-            force_send_btn.visibility = View.VISIBLE
-            force_send_progress.visibility = View.INVISIBLE
+            binding.contentEnabled.forceSendBtn.visibility = View.VISIBLE
+            binding.contentEnabled.forceSendProgress.visibility = View.INVISIBLE
         }
     }
 
     private fun initDisabledView() {
-        btn_disabled_settings.setOnClickListener {
+        binding.contentDisabled.btnDisabledSettings.setOnClickListener {
             startActivity(Intent(this, ActivitySettings::class.java))
         }
     }
 
     private fun initEnabledView() {
-        btn_enabled_settings.setOnClickListener {
+        binding.contentEnabled.btnEnabledSettings.setOnClickListener {
             startActivity(Intent(this, ActivitySettings::class.java))
         }
     }

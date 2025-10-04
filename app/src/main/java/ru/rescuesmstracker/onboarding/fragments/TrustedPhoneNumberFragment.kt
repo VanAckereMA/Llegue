@@ -27,9 +27,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import kotlinx.android.synthetic.main.f_base_onboarding.*
-import kotlinx.android.synthetic.main.f_trusted_phone_number.*
-import kotlinx.android.synthetic.main.v_contact_input.view.*
 import ru.rescuesmstracker.data.Contact
 import ru.rescuesmstracker.onboarding.ActivitySearchContact
 import ru.rescuesmstracker.Constants
@@ -37,14 +34,20 @@ import ru.rescuesmstracker.onboarding.FormatUtils
 import ru.rescuesmstracker.utils.TextWatcherAdapter
 import ru.rescuesmstracker.widget.ContactView
 import ru.rst.rescuesmstracker.R
+import ru.rst.rescuesmstracker.databinding.FTrustedPhoneNumberBinding
+import ru.rst.rescuesmstracker.databinding.VContactInputBinding
 import java.lang.IllegalArgumentException
 
 class TrustedPhoneNumberFragment : BaseOnBoardingFragment() {
 
     enum class Mode {
         DIRECT_INPUT() {
-            override fun inflate(container: ViewGroup, contact: Contact, button: View): View {
-                val result = LayoutInflater.from(container.context).inflate(R.layout.v_contact_input, container, true)
+            override fun inflate(container: ViewGroup, contact: Contact, button: View) {
+                val result = VContactInputBinding.inflate(
+                    LayoutInflater.from(container.context),
+                    container,
+                    true
+                )
                 val formatUtils = FormatUtils(container.context)
                 val onTextChanged: (String) -> Unit = { extractedValue ->
                     contact.phone = extractedValue
@@ -59,20 +62,17 @@ class TrustedPhoneNumberFragment : BaseOnBoardingFragment() {
                 if (!contact.phone.isEmpty()) {
                     result.inputPhone.setText(contact.phone)
                 }
-
-                return result
             }
         },
         SELECTED_CONTACT {
-            override fun inflate(container: ViewGroup, contact: Contact, button: View): View {
+            override fun inflate(container: ViewGroup, contact: Contact, button: View) {
                 val result = LayoutInflater.from(container.context).inflate(R.layout.v_contact_selected, container, true)
                 ((result as FrameLayout).getChildAt(0) as ContactView).setContact(contact)
                 button.isEnabled = true
-                return result
             }
         };
 
-        abstract fun inflate(container: ViewGroup, contact: Contact, button: View): View
+        abstract fun inflate(container: ViewGroup, contact: Contact, button: View)
     }
 
     private var contact: Contact = Contact()
@@ -82,20 +82,22 @@ class TrustedPhoneNumberFragment : BaseOnBoardingFragment() {
         }
     private var mode: Mode = Mode.DIRECT_INPUT
         set(value) {
-            contactContainer.removeAllViews()
-            value.inflate(contactContainer, contact, go_further_button)
+            binding.contactContainer.removeAllViews()
+            value.inflate(binding.contactContainer, contact, containerBinding.goFurtherButton)
             field = value
         }
 
+    private lateinit var binding: FTrustedPhoneNumberBinding
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        go_further_button.setOnClickListener {
+        containerBinding.goFurtherButton.setOnClickListener {
             onBoardingController?.onContactSelected(contact)
             onBoardingController?.goToNextScreen()
         }
-        go_further_button.isEnabled = false
+        containerBinding.goFurtherButton.isEnabled = false
 
-        btnSelectContact.setOnClickListener {
+        binding.btnSelectContact.setOnClickListener {
             startActivityForResult(Intent(activity, ActivitySearchContact::class.java),
                     Constants.PHONE_SELECT_ACTIVITY_REQUEST_CODE)
         }
@@ -122,5 +124,7 @@ class TrustedPhoneNumberFragment : BaseOnBoardingFragment() {
         }
     }
 
-    override fun getLayoutRes(): Int = R.layout.f_trusted_phone_number
+    override fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup) {
+        binding = FTrustedPhoneNumberBinding.inflate(inflater, container, true)
+    }
 }

@@ -27,13 +27,14 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import kotlinx.android.synthetic.main.v_contact.view.*
 import ru.rescuesmstracker.data.Contact
 import ru.rescuesmstracker.extensions.color
 import ru.rst.rescuesmstracker.R
+import ru.rst.rescuesmstracker.databinding.VContactBinding
 import java.io.FileNotFoundException
 
 class ContactView : LinearLayout {
@@ -45,19 +46,19 @@ class ContactView : LinearLayout {
     var isRemovingEnabled = false
         set(value) {
             field = value
-            btnRemove.visibility = if (value) View.VISIBLE else View.GONE
+            binding.btnRemove.visibility = if (value) View.VISIBLE else View.GONE
         }
 
-    init {
-        View.inflate(context, R.layout.v_contact, this)
+    private val binding = VContactBinding.inflate(LayoutInflater.from(context), this)
 
+    init {
         orientation = HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
 
         val padding = resources.getDimensionPixelSize(R.dimen.contact_view_padding)
         setPadding(padding, padding, padding, padding)
 
-        btnRemove.setOnClickListener { onRemoveListener?.onClick(it) }
+        binding.btnRemove.setOnClickListener { onRemoveListener?.onClick(it) }
     }
 
     fun setContact(contact: Contact?): ContactView {
@@ -67,15 +68,15 @@ class ContactView : LinearLayout {
 
     fun setContact(contact: Contact?, query: String): ContactView {
         if (contact == null) {
-            visibility = View.INVISIBLE
+            visibility = INVISIBLE
         } else {
-            visibility = View.VISIBLE
+            visibility = VISIBLE
 
             if (contact.name.isEmpty()) {
-                textContactPhone.visibility = View.GONE
+                binding.textContactPhone.visibility = GONE
             } else {
-                textContactPhone.text = contact.phone
-                textContactPhone.visibility = View.VISIBLE
+                binding.textContactPhone.text = contact.phone
+                binding.textContactPhone.visibility = VISIBLE
             }
 
             val title = if (contact.name.isEmpty()) contact.phone else contact.name
@@ -85,24 +86,24 @@ class ContactView : LinearLayout {
                 spannedContactName.setSpan(ForegroundColorSpan(context.color(R.color.amber_600)),
                         index, index + query.length,
                         Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-                textContactName.text = spannedContactName
+                binding.textContactName.text = spannedContactName
             } else {
-                textContactName.text = title
+                binding.textContactName.text = title
             }
 
             if (contact.getPhotoUri() == null) {
-                imageContactPhoto.setImageResource(R.drawable.ic_default_avatar_fg)
-                imageContactPhoto.scaleType = ImageView.ScaleType.CENTER
+                binding.imageContactPhoto.setImageResource(R.drawable.ic_default_avatar_fg)
+                binding.imageContactPhoto.scaleType = ImageView.ScaleType.CENTER
             } else {
                 try {
                     val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, contact.getPhotoUri())
                     val drawable = RoundedBitmapDrawableFactory.create(resources, bitmap)
                     drawable.cornerRadius = Math.max(bitmap.width, bitmap.height) / 2.0f
-                    imageContactPhoto.setImageDrawable(drawable)
-                    imageContactPhoto.scaleType = ImageView.ScaleType.CENTER_CROP
+                    binding.imageContactPhoto.setImageDrawable(drawable)
+                    binding.imageContactPhoto.scaleType = ImageView.ScaleType.CENTER_CROP
                 } catch (e: FileNotFoundException) {
-                    imageContactPhoto.setImageResource(R.drawable.ic_default_avatar_fg)
-                    imageContactPhoto.scaleType = ImageView.ScaleType.CENTER
+                    binding.imageContactPhoto.setImageResource(R.drawable.ic_default_avatar_fg)
+                    binding.imageContactPhoto.scaleType = ImageView.ScaleType.CENTER
                 }
             }
         }

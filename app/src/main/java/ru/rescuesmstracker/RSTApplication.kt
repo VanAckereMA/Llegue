@@ -42,6 +42,8 @@ class RSTApplication : Application() {
                 .name(dbName)
                 .schemaVersion(dbVersion)
                 .migration(Migration())
+                .allowWritesOnUiThread(true)
+                .allowQueriesOnUiThread(true)
                 .build()
         Realm.setDefaultConfiguration(defaultConfig)
 
