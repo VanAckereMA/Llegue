@@ -29,7 +29,7 @@ import ru.rescuesmstracker.utils.AppUpdateManager
 
 class RSTApplication : Application() {
 
-    private val dbVersion = 2L
+    private val dbVersion = 3L
     private val dbName = "default.realm"
 
     override fun onCreate() {

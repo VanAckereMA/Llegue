@@ -25,7 +25,7 @@ import io.realm.RealmMigration
 
 class Migration : RealmMigration {
     private val logTag = "Migration"
-    private val migrationRules = arrayOf(MigrationRule2())
+    private val migrationRules = arrayOf(MigrationRule2(), MigrationRule3())
 
     override fun migrate(realm: DynamicRealm, oldVersion: Long, newVersion: Long) {
         ((oldVersion + 1)..newVersion)
