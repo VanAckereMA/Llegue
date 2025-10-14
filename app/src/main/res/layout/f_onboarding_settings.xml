@@ -10,5 +10,5 @@
         android:layout_height="wrap_content"
         android:text="@string/onboarding_settings_title" />
 
-    <include layout="@layout/v_main_settings" />
+    <include android:id="@+id/mainSettings" layout="@layout/v_main_settings" />
 </LinearLayout>

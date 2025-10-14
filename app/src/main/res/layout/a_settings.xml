@@ -96,7 +96,7 @@
                 android:layout_height="wrap_content"
                 app:title="@string/settings_send_location" />
 
-            <include layout="@layout/v_main_settings" />
+            <include android:id="@+id/mainSettings" layout="@layout/v_main_settings" />
 
             <ru.rescuesmstracker.widget.RSTPreferenceView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/prefActiveSim"

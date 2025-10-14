@@ -68,10 +68,10 @@ open class Contact(@PrimaryKey var id: String,
     constructor() : this("", "", "", false)
 
     constructor(parcel: Parcel) : this(
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
+            requireNotNull(parcel.readString()),
+            requireNotNull(parcel.readString()),
+            requireNotNull(parcel.readString()),
+            requireNotNull(parcel.readString()),
             parcel.readByte() != 0.toByte())
 
     override fun equals(other: Any?): Boolean {

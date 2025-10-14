@@ -22,21 +22,23 @@ package ru.rescuesmstracker.onboarding.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import kotlinx.android.synthetic.main.f_base_onboarding.*
-import kotlinx.android.synthetic.main.f_code_word.*
 import ru.rescuesmstracker.utils.hideKeyboard
-import ru.rst.rescuesmstracker.R
+import ru.rst.rescuesmstracker.databinding.FCodeWordBinding
 
 class CodeWordFragment : BaseOnBoardingFragment() {
+
+    private lateinit var binding: FCodeWordBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val listener = object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                btnSentCodeWord.isEnabled = !s.isEmpty()
-                btnRemoveCodeWord.isEnabled = !s.isEmpty()
+                binding.btnSentCodeWord.isEnabled = !s.isEmpty()
+                binding.btnRemoveCodeWord.isEnabled = !s.isEmpty()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -45,28 +47,32 @@ class CodeWordFragment : BaseOnBoardingFragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         }
-        inputCodeWord.addTextChangedListener(listener)
-        inputCodeWord.setOnEditorActionListener { _, action, _ ->
+        binding.inputCodeWord.addTextChangedListener(listener)
+        binding.inputCodeWord.setOnEditorActionListener { _, action, _ ->
             if (action == EditorInfo.IME_ACTION_DONE) {
-                hideKeyboard(inputCodeWord)
+                hideKeyboard(binding.inputCodeWord)
                 true
             } else {
                 false
             }
         }
 
-        btnSentCodeWord.setOnClickListener {
-            onBoardingController?.sendCodeWord(onBoardingController!!.getContact(),
-                    inputCodeWord.text.toString())
+        binding.btnSentCodeWord.setOnClickListener {
+            onBoardingController?.sendCodeWord(
+                onBoardingController!!.getContact(),
+                binding.inputCodeWord.text.toString()
+            )
         }
-        go_further_button.setOnClickListener {
-            onBoardingController?.onCodeWordSet(inputCodeWord.text.toString())
+        containerBinding.goFurtherButton.setOnClickListener {
+            onBoardingController?.onCodeWordSet(binding.inputCodeWord.text.toString())
             onBoardingController?.goToNextScreen()
         }
-        btnRemoveCodeWord.setOnClickListener {
-            inputCodeWord.text = null
+        binding.btnRemoveCodeWord.setOnClickListener {
+            binding.inputCodeWord.text = null
         }
     }
 
-    override fun getLayoutRes(): Int = R.layout.f_code_word
+    override fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup) {
+        binding = FCodeWordBinding.inflate(inflater, container, true)
+    }
 }

@@ -4,7 +4,7 @@
 def PRIVATE_PROPS_FILE_NAME = "private.properties"
 
 ext.privateProps = new Properties()
-def privateDataDir = new File("app/privatedata").absoluteFile
+def privateDataDir = new File(rootDir, "app/privatedata").absoluteFile
 
 if (System.env.RST_BRANCH != null && System.env.RST_REMOTE_URL != null) {
     "git clone -b ${System.env.RST_BRANCH} ${System.env.RST_REMOTE_URL} ${privateDataDir.absolutePath}"

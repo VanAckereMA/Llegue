@@ -61,10 +61,11 @@ object ScheduledSmsModel : BaseSmsModel() {
         RSTPreferences.putSmsSendTriggerTime(context, triggerTime)
 
         realm.beginTransaction()
-        val pendingIntent = createSmsPendingIntent(context,
-                ContactsController.loadAllContacts().map { contact ->
-                    realm.copyToRealm(Sms(contact, triggerTime, "", Sms.Type.LOCATION_SCHEDULED))
-                })
+        val pendingIntent = createSmsPendingIntent(
+            context,
+            ContactsController.loadAllContacts().map { contact ->
+                realm.copyToRealm(Sms(contact, triggerTime, "", Sms.Type.LOCATION_SCHEDULED))
+            })
         realm.commitTransaction()
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -114,7 +115,8 @@ object ScheduledSmsModel : BaseSmsModel() {
 
     fun getCurrentlyProcessingSms(): Sms? = queryByStatus(Sms.Status.SENDING)
 
-    fun getPreviouslyProcessedSms(): Sms? = queryByStatus(Sms.Status.SENT, Sms.Status.FAILED_TO_SEND)
+    fun getPreviouslyProcessedSms(): Sms? =
+        queryByStatus(Sms.Status.SENT, Sms.Status.FAILED_TO_SEND)
 
     private fun queryByStatus(vararg statuses: Sms.Status): Sms? {
         val query = realm.where(Sms::class.java)
@@ -127,7 +129,9 @@ object ScheduledSmsModel : BaseSmsModel() {
                 query.or().equalTo("status", statuses[0].name)
             }
         }
-        val sortedSms = query.findAllSorted("scheduledTimestamp", Sort.DESCENDING)
+        val sortedSms = query
+            .sort("scheduledTimestamp", Sort.DESCENDING)
+            .findAll()
         return if (sortedSms.isEmpty()) {
             null
         } else {
@@ -139,14 +143,21 @@ object ScheduledSmsModel : BaseSmsModel() {
      * Create sms pending intent to use it with [AlarmManager]. It put sms ids to extra for
      * [SmsActionSendReceiver] if [smsList] is non-empty
      */
-    private fun createSmsPendingIntent(context: Context, smsList: List<Sms> = emptyList()): PendingIntent {
+    private fun createSmsPendingIntent(
+        context: Context,
+        smsList: List<Sms> = emptyList()
+    ): PendingIntent {
         val intent = Intent(context, SmsActionSendReceiver::class.java)
         intent.action = SmsActionSendReceiver.actionSendSms
         if (smsList.isNotEmpty()) {
-            intent.putExtra(SmsActionSendReceiver.smsIdsKey, smsList.map { sms -> sms.id }.toTypedArray())
+            intent.putExtra(
+                SmsActionSendReceiver.smsIdsKey,
+                smsList.map { sms -> sms.id }.toTypedArray()
+            )
         }
         return PendingIntent.getBroadcast(
-                context.applicationContext, 1313, intent,
-                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_CANCEL_CURRENT)
+            context.applicationContext, 1313, intent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_CANCEL_CURRENT
+        )
     }
 }

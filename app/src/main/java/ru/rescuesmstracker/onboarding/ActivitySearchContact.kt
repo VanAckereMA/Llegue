@@ -30,7 +30,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.a_search_contact.*
 import ru.rescuesmstracker.data.Contact
 import ru.rescuesmstracker.extensions.color
 import ru.rescuesmstracker.extensions.drawable
@@ -38,6 +37,7 @@ import ru.rescuesmstracker.onboarding.model.OnBoardingContactsProvider
 import ru.rescuesmstracker.widget.BaseRSTActivity
 import ru.rescuesmstracker.widget.ContactView
 import ru.rst.rescuesmstracker.R
+import ru.rst.rescuesmstracker.databinding.ASearchContactBinding
 
 class ActivitySearchContact : BaseRSTActivity(), OnBoardingContactsProvider.ContactsCallback {
 
@@ -54,20 +54,21 @@ class ActivitySearchContact : BaseRSTActivity(), OnBoardingContactsProvider.Cont
 
     override fun createActivity(savedInstanceState: Bundle?) {
         super.createActivity(savedInstanceState)
-        setContentView(R.layout.a_search_contact)
+        val binding = ASearchContactBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        btnBack.setOnClickListener { onBackPressed() }
-        btnAdd.setOnClickListener {
+        binding.btnBack.setOnClickListener { onBackPressed() }
+        binding.btnAdd.setOnClickListener {
             val contact = Contact()
-            contact.phone = inputSearch.text.toString()
+            contact.phone = binding.inputSearch.text.toString()
             setResultContactAndFinish(contact)
         }
-        btnAdd.isEnabled = false
+        binding.btnAdd.isEnabled = false
         val listener = object : TextWatcher {
             val formatUtils = FormatUtils(this@ActivitySearchContact)
 
             override fun afterTextChanged(s: Editable) {
-                btnAdd.isEnabled = !s.isEmpty() && formatUtils.isValidPhoneNumber(s.toString())
+                binding.btnAdd.isEnabled = !s.isEmpty() && formatUtils.isValidPhoneNumber(s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -77,13 +78,13 @@ class ActivitySearchContact : BaseRSTActivity(), OnBoardingContactsProvider.Cont
                 contactsProvider.queryContacts(this@ActivitySearchContact, s.toString(), this@ActivitySearchContact)
             }
         }
-        inputSearch.addTextChangedListener(listener)
+        binding.inputSearch.addTextChangedListener(listener)
 
-        listContacts.adapter = adapter
-        val dividerItemDecoration = DividerItemDecoration(listContacts.context,
-                (listContacts.layoutManager as LinearLayoutManager).orientation)
+        binding.listContacts.adapter = adapter
+        val dividerItemDecoration = DividerItemDecoration(binding.listContacts.context,
+                (binding.listContacts.layoutManager as LinearLayoutManager).orientation)
         dividerItemDecoration.setDrawable(drawable(R.drawable.divider_list_contacts))
-        listContacts.addItemDecoration(dividerItemDecoration)
+        binding.listContacts.addItemDecoration(dividerItemDecoration)
         contactsProvider.queryContacts(this, "", this)
     }
 

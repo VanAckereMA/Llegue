@@ -21,12 +21,15 @@ package ru.rescuesmstracker.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import kotlinx.android.synthetic.main.v_rst_preference.view.*
 import ru.rst.rescuesmstracker.R
+import ru.rst.rescuesmstracker.databinding.VRstPreferenceBinding
 
 class RSTPreferenceView : LinearLayout {
+
+    private val binding = VRstPreferenceBinding.inflate(LayoutInflater.from(context), this)
 
     constructor(context: Context?) : super(context) {
         init(null)
@@ -49,17 +52,17 @@ class RSTPreferenceView : LinearLayout {
 
         if (attrs != null) {
             val array = context.obtainStyledAttributes(attrs, R.styleable.RSTPreferenceView)
-            textRSTPreferenceValue.text = array.getString(R.styleable.RSTPreferenceView_value)
-            textRSTPreferenceTitle.text = array.getString(R.styleable.RSTPreferenceView_title)
+            binding.textRSTPreferenceValue.text = array.getString(R.styleable.RSTPreferenceView_value)
+            binding.textRSTPreferenceTitle.text = array.getString(R.styleable.RSTPreferenceView_title)
             array.recycle()
         }
     }
 
     fun setValue(text: CharSequence) {
-        textRSTPreferenceValue.text = text
+        binding.textRSTPreferenceValue.text = text
     }
 
-    fun getValue(): CharSequence = textRSTPreferenceValue.text
+    fun getValue(): CharSequence = binding.textRSTPreferenceValue.text
 
-    fun getTitle(): String = textRSTPreferenceTitle.text.toString()
+    fun getTitle(): String = binding.textRSTPreferenceTitle.text.toString()
 }

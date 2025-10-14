@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 
 def feedbackEmail
@@ -28,9 +27,10 @@ def releaseVersion = "${versionProps['rst.major_version']}" +
 archivesBaseName = "open-sms-locator-$releaseVersion"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 33
     defaultConfig {
         applicationId "ru.rst.rescuesmstracker"
+        namespace "ru.rst.rescuesmstracker"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode String.format("%d%03d%04d",
@@ -55,6 +55,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -68,6 +71,10 @@ android {
         unitTests {
             includeAndroidResources = true
         }
+    }
+    buildFeatures {
+        buildConfig true
+        viewBinding true
     }
 }
 def supportVersion = "28.0.0"
@@ -92,8 +99,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation "com.android.support:recyclerview-v7:$supportVersion"
-    implementation 'com.kyleduo.switchbutton:library:1.4.6'
-    implementation 'com.redmadrobot:inputmask:2.3.0'
+    implementation 'com.kyleduo.switchbutton:library:2.1.0'
+    implementation 'com.redmadrobot:input-mask-android:6.0.0'
     implementation 'com.mikhaellopez:circularprogressbar:1.1.1'
     implementation "com.android.support:design:$supportVersion"
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'

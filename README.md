@@ -27,3 +27,18 @@ It’s informative: a message contains phone’s current coordinates, their accu
 It is a Beta version. Please, do not hesitate to report bugs!
 
 Localized to two languages (Russian and English, depending on your phone’s OS language)
+
+# How to build a signed APK
+
+1. Create `privatedata` directory in the `app` folder
+1. Put your keystore in `privatedata` and rename it to `release.keystore`
+1. Create `private.properties` file in `privatedata` folder with the following properties:
+    - `rst.storePassword`
+    - `rst.keyPassword`
+    - `rst.keyAlias`
+    - `rst.storeFile`
+    - `rst.feedbackEmail`
+1. Increment the app version by running `./gradlew incrementVersion` in Terminal
+    - *(optionally)* Push changed `version.properties` file by running `./gradlew pushVersion`
+1. Run `RST_PUBLIC_RELEASE=true ./gradlew assembleRelease`
+1. APK appears in `app/build/outputs/apk/release` directory

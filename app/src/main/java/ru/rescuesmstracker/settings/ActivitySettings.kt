@@ -25,8 +25,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.widget.NestedScrollView
 import android.view.View
-import kotlinx.android.synthetic.main.a_settings.*
-import kotlinx.android.synthetic.main.v_main_settings.*
 import ru.rescuesmstracker.Constants
 import ru.rescuesmstracker.RSTSmsManager
 import ru.rescuesmstracker.WhoCanRequestLocation
@@ -41,10 +39,12 @@ import ru.rescuesmstracker.widget.dialog.RadioButtonsDialogMode
 import ru.rescuesmstracker.widget.dialog.TextDialogMode
 import ru.rst.rescuesmstracker.BuildConfig
 import ru.rst.rescuesmstracker.R
+import ru.rst.rescuesmstracker.databinding.ASettingsBinding
 
 class ActivitySettings : BaseRSTActivity() {
 
     private lateinit var mainSettingsController: MainSettingsController
+    private lateinit var binding: ASettingsBinding
     private val contactsAdapter = ContactsAdapter()
     private val formatUtils = FormatUtils(this)
 
@@ -60,18 +60,24 @@ class ActivitySettings : BaseRSTActivity() {
     override fun createActivity(savedInstanceState: Bundle?) {
         super.createActivity(savedInstanceState)
 
-        setContentView(R.layout.a_settings)
-        mainSettingsController = MainSettingsController(this, pref_interval, pref_max_sms_count, pref_coords_format)
+        binding = ASettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        mainSettingsController = MainSettingsController(
+            activity = this,
+            pref_interval = binding.mainSettings.prefInterval,
+            pref_max_sms_count = binding.mainSettings.prefMaxSmsCount,
+            pref_coords_format = binding.mainSettings.prefCoordsFormat
+        )
         mainSettingsController.initViews()
 
-        btnBack.setOnClickListener { onBackPressed() }
+        binding.btnBack.setOnClickListener { onBackPressed() }
         contactsAdapter.refillWithContacts(ContactsController.loadAllContacts())
-        listContacts.adapter = contactsAdapter
-        btnAddPhone.setOnClickListener {
+        binding.listContacts.adapter = contactsAdapter
+        binding.btnAddPhone.setOnClickListener {
             val intent = Intent(this@ActivitySettings, ActivitySearchContact::class.java)
             startActivityForResult(intent, Constants.PHONE_SELECT_ACTIVITY_REQUEST_CODE)
         }
-        btnCodeWordWhy.setOnClickListener {
+        binding.btnCodeWordWhy.setOnClickListener {
             val dialog = RSTAlertDialog()
             dialog.dialogMode = TextDialogMode(this@ActivitySettings)
                     .setText(R.string.settings_code_word_why_answer)
@@ -79,22 +85,22 @@ class ActivitySettings : BaseRSTActivity() {
             dialog.setTitle(getString(R.string.settings_code_word_why)).show(supportFragmentManager, "")
         }
 
-        btnProblems.setOnClickListener {
+        binding.btnProblems.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                     "mailto", BuildConfig.FEEDBACK_EMAIL, null))
             intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedback_email_theme))
             startActivity(Intent.createChooser(intent, getString(R.string.feedback_email_title)))
         }
 
-        codeWord.setValue(RSTPreferences.getCodeWord(this))
-        codeWord.setOnClickListener {
+        binding.codeWord.setValue(RSTPreferences.getCodeWord(this))
+        binding.codeWord.setOnClickListener {
             val dialog = RSTAlertDialog()
-            val dialogMode = InputDialogMode(this@ActivitySettings, codeWord.getValue())
+            val dialogMode = InputDialogMode(this@ActivitySettings, binding.codeWord.getValue())
             dialogMode.hint = getString(R.string.code_word_hint)
             dialog.dialogMode = dialogMode
             dialog.onOkListener = View.OnClickListener {
                 val newCodeWord = dialogMode.getInput()
-                codeWord.setValue(newCodeWord)
+                binding.codeWord.setValue(newCodeWord)
                 RSTPreferences.putCodeWord(this, newCodeWord)
 
                 if (newCodeWord.isEmpty()) {
@@ -119,11 +125,11 @@ class ActivitySettings : BaseRSTActivity() {
                     .show(supportFragmentManager, "")
         }
 
-        prefWhoCanRequestLocation.setValue(getString(RSTPreferences.whoCanRequestLocation(this).textRes))
+        binding.prefWhoCanRequestLocation.setValue(getString(RSTPreferences.whoCanRequestLocation(this).textRes))
         val whoCanRequestLocationDialogMode = RadioButtonsDialogMode<WhoCanRequestLocation>()
         whoCanRequestLocationDialogMode.addButtons(WhoCanRequestLocation.values())
         whoCanRequestLocationDialogMode.textProvider = { value -> getString(value.textRes) }
-        prefWhoCanRequestLocation.setOnClickListener {
+        binding.prefWhoCanRequestLocation.setOnClickListener {
             whoCanRequestLocationDialogMode.setCheckedId(WhoCanRequestLocation.values().indexOf(RSTPreferences.whoCanRequestLocation(this)))
             val dialog = RSTAlertDialog()
             dialog.dialogMode = whoCanRequestLocationDialogMode
@@ -131,22 +137,22 @@ class ActivitySettings : BaseRSTActivity() {
                 if (whoCanRequestLocationDialogMode.getCheckedId() >= 0) {
                     val index = whoCanRequestLocationDialogMode.getCheckedId()
                     RSTPreferences.putWhoCanRequestLocation(this, WhoCanRequestLocation.values()[index])
-                    prefWhoCanRequestLocation.setValue(getString(WhoCanRequestLocation.values()[index].textRes))
+                    binding.prefWhoCanRequestLocation.setValue(getString(WhoCanRequestLocation.values()[index].textRes))
                 }
             }
-            dialog.setTitle(prefWhoCanRequestLocation.getTitle())
+            dialog.setTitle(binding.prefWhoCanRequestLocation.getTitle())
             dialog.show(supportFragmentManager, "who_can_request_location")
         }
 
         if (RSTSmsManager.get().canSelectSubscription(this)) {
             val allAvailableSim = RSTSmsManager.get().getAllAvailableSimIds(this)
-            prefActiveSim.visibility = View.VISIBLE
-            prefActiveSim.setValue(formatUtils.formatCarrierName(RSTSmsManager.get()
+            binding.prefActiveSim.visibility = View.VISIBLE
+            binding.prefActiveSim.setValue(formatUtils.formatCarrierName(RSTSmsManager.get()
                     .getActiveSimId(this).carrierName))
             val activeSimDialogMode = RadioButtonsDialogMode<RSTSmsManager.SimInfo>()
             activeSimDialogMode.addButtons(allAvailableSim)
             activeSimDialogMode.textProvider = { value -> formatUtils.formatSimInfo(value) }
-            prefActiveSim.setOnClickListener {
+            binding.prefActiveSim.setOnClickListener {
                 activeSimDialogMode.setCheckedId(allAvailableSim.indexOf(RSTSmsManager.get().getActiveSimId(this)))
                 val dialog = RSTAlertDialog()
                 dialog.dialogMode = activeSimDialogMode
@@ -155,21 +161,21 @@ class ActivitySettings : BaseRSTActivity() {
                         val index = activeSimDialogMode.getCheckedId()
                         val result = allAvailableSim[index]
                         RSTPreferences.setActiveSubscriptionId(this, result.id)
-                        prefActiveSim.setValue(formatUtils.formatCarrierName(RSTSmsManager.get()
+                        binding.prefActiveSim.setValue(formatUtils.formatCarrierName(RSTSmsManager.get()
                                 .getActiveSimId(this).carrierName))
                     }
                 }
-                dialog.setTitle(prefActiveSim.getTitle())
+                dialog.setTitle(binding.prefActiveSim.getTitle())
                 dialog.show(supportFragmentManager, "active_sms")
             }
         } else {
-            prefActiveSim.visibility = View.GONE
+            binding.prefActiveSim.visibility = View.GONE
         }
 
-        textVersion.text = getString(R.string.settings_version,
+        binding.textVersion.text = getString(R.string.settings_version,
                 packageManager.getPackageInfo(packageName, 0).versionName)
 
-        btnShare.setOnClickListener {
+        binding.btnShare.setOnClickListener {
             val sharingIntent = Intent(Intent.ACTION_SEND)
             sharingIntent.type = "text/plain"
             sharingIntent.putExtra(Intent.EXTRA_TEXT, "https://safetytracker.org")
@@ -178,34 +184,34 @@ class ActivitySettings : BaseRSTActivity() {
 
         canScroll {
             if (it) {
-                settingsScrollView.setOnScrollChangeListener(
+                binding.settingsScrollView.setOnScrollChangeListener(
                         NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY
                             ->
                             if (scrollY == 0) {
-                                btnScrollBottom.show()
+                                binding.btnScrollBottom.show()
                             } else {
-                                btnScrollBottom.hide()
+                                binding.btnScrollBottom.hide()
                             }
                         })
-                btnScrollBottom.visibility = View.VISIBLE
-                btnScrollBottom.setOnClickListener {
-                    settingsScrollView.smoothScrollBy(0,
+                binding.btnScrollBottom.visibility = View.VISIBLE
+                binding.btnScrollBottom.setOnClickListener {
+                    binding.settingsScrollView.smoothScrollBy(0,
                             resources.getDimensionPixelSize(R.dimen.settings_button_scroll_by))
                 }
             } else {
-                btnScrollBottom.visibility = View.GONE
+                binding.btnScrollBottom.visibility = View.GONE
             }
         }
 
     }
 
     private fun canScroll(onResult: (Boolean) -> Unit) {
-        settingsScrollView.post {
-            val child = settingsScrollView.getChildAt(0)
+        binding.settingsScrollView.post {
+            val child = binding.settingsScrollView.getChildAt(0)
             if (child != null) {
                 val childHeight = child.height
-                onResult.invoke(settingsScrollView.height < childHeight +
-                        settingsScrollView.paddingTop + settingsScrollView.paddingBottom)
+                onResult.invoke(binding.settingsScrollView.height < childHeight +
+                        binding.settingsScrollView.paddingTop + binding.settingsScrollView.paddingBottom)
             } else {
                 onResult.invoke(false)
             }

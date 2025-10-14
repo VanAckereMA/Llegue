@@ -27,14 +27,15 @@ import android.os.Bundle
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import android.view.LayoutInflater
 import android.view.View
-import kotlinx.android.synthetic.main.f_base_onboarding.*
-import kotlinx.android.synthetic.main.f_permissions.*
+import android.view.ViewGroup
 import ru.rescuesmstracker.Constants
 import ru.rescuesmstracker.extensions.color
 import ru.rescuesmstracker.extensions.drawable
 import ru.rescuesmstracker.extensions.isPermissionGranted
 import ru.rst.rescuesmstracker.R
+import ru.rst.rescuesmstracker.databinding.FPermissionsBinding
 
 @TargetApi(Build.VERSION_CODES.M)
 class PermissionsFragment : BaseOnBoardingFragment() {
@@ -46,6 +47,8 @@ class PermissionsFragment : BaseOnBoardingFragment() {
         IDLE(R.color.white, false, R.string.permissions_title, R.drawable.splash_permissions),
         ERROR(R.color.red_500, true, R.string.permissions_title_error, R.drawable.splash_permissions_error);
     }
+
+    private lateinit var binding: FPermissionsBinding
 
     interface PermissionsListener {
         fun onAllPermissionsGranted()
@@ -72,16 +75,16 @@ class PermissionsFragment : BaseOnBoardingFragment() {
 
     private var state: State = State.IDLE
         set(value) {
-            text_title.setTextColor(requireActivity().color(value.titleTextColorRes))
-            text_title.setText(value.titleRes)
-            go_further_button.isActivated = value.isButtonActivated
-            img_splash.setImageDrawable(requireActivity().drawable(value.splashDrawableRes))
+            binding.textTitle.setTextColor(requireActivity().color(value.titleTextColorRes))
+            binding.textTitle.setText(value.titleRes)
+            containerBinding.goFurtherButton.isActivated = value.isButtonActivated
+            binding.imgSplash.setImageDrawable(requireActivity().drawable(value.splashDrawableRes))
             field = value
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        go_further_button.setOnClickListener {
+        containerBinding.goFurtherButton.setOnClickListener {
             requestPermissions(PERMISSIONS.filter { !isPermissionGranted(requireActivity(), it) }.toTypedArray(),
                     Constants.REQUEST_PERMISSIONS_REQUEST_CODE)
         }
@@ -92,7 +95,7 @@ class PermissionsFragment : BaseOnBoardingFragment() {
             onBoardingController?.goToNextScreen()
             permissionsListener?.onAllPermissionsGranted()
         }
-        go_further_button.text = getString(R.string.permissions_permit)
+        containerBinding.goFurtherButton.text = getString(R.string.permissions_permit)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -112,5 +115,7 @@ class PermissionsFragment : BaseOnBoardingFragment() {
         }
     }
 
-    override fun getLayoutRes(): Int = R.layout.f_permissions
+    override fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup) {
+        binding = FPermissionsBinding.inflate(inflater, container, true)
+    }
 }
