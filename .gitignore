@@ -12,6 +12,9 @@ captures/
 *.jks
 privatedata/
 
+# Frames de diseño: referencias de trabajo, no forman parte de la app
+frames/
+
 # IDE
 .idea/
 *.iml
