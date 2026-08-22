@@ -144,6 +144,7 @@ interface RSTSmsManager {
 
             override fun getAllAvailableSimIds(context: Context): List<SimInfo> {
                 return SubscriptionManager.from(context).activeSubscriptionInfoList
+                        .orEmpty()
                         .map { SimInfo(it.subscriptionId, it.number, it.carrierName) }
             }
         }

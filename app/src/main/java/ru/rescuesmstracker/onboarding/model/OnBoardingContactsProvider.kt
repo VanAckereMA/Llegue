@@ -23,7 +23,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.database.Cursor
 import android.provider.ContactsContract
-import android.support.v4.content.ContentResolverCompat
 import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -52,20 +51,16 @@ class OnBoardingContactsProvider {
         if (AppPermissions.canReadContacts(activity)) {
             return Observable
                     .create<Cursor> { e ->
-                        run {
-                            if (query.isEmpty()) {
-                                e.onNext(ContentResolverCompat.query(activity.contentResolver,
-                                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                        PROJECTION,
-                                        null, null,
-                                        null, null))
-                            } else {
-                                e.onNext(ContentResolverCompat.query(activity.contentResolver,
-                                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                        PROJECTION,
-                                        SELECTION, arrayOf("%$query%"),
-                                        null, null))
-                            }
+                        val cursor = activity.contentResolver.query(
+                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                PROJECTION,
+                                if (query.isEmpty()) null else SELECTION,
+                                if (query.isEmpty()) null else arrayOf("%$query%"),
+                                null)
+                        if (cursor == null) {
+                            e.onError(IllegalStateException("Contacts provider returned no cursor"))
+                        } else {
+                            e.onNext(cursor)
                         }
                     }
                     .subscribeOn(Schedulers.computation())

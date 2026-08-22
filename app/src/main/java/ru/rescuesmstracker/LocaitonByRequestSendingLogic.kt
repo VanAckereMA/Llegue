@@ -20,7 +20,7 @@
 package ru.rescuesmstracker
 
 import android.content.Context
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.telephony.SmsMessage
 import ru.rescuesmstracker.data.Contact
 import ru.rescuesmstracker.onboarding.FormatUtils
