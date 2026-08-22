@@ -40,9 +40,7 @@ El contacto que recibe los avisos solo necesita poder recibir mensajes de texto.
 
 ## Cómo compilar
 
-Requiere Android Studio con JDK 17 o superior y el SDK de Android 36. El proyecto
-Gradle vive en el subdirectorio `Llegue-master`, así que los comandos se ejecutan
-desde ahí.
+Requiere Android Studio con JDK 17 o superior y el SDK de Android 36.
 
 ```
 ./gradlew :app:assembleDebug
