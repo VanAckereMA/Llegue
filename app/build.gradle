@@ -3,51 +3,42 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
-def feedbackEmail
-def isRSTPublicRelease = System.env.RST_PUBLIC_RELEASE
-if (isRSTPublicRelease) {
+def isPublicRelease = System.env.LLEGUE_PUBLIC_RELEASE
+if (isPublicRelease) {
     println("Performing signed release build")
     apply from: "loadPrivateData.gradle"
-    println("Got props:" + privateProps)
-    feedbackEmail = privateProps['rst.feedbackEmail']
-    if (feedbackEmail == null || feedbackEmail.isEmpty()) {
-        throw new GradleException("No feedback e-mail set")
-    }
 } else {
     println("Performing regular build")
-    feedbackEmail = "feedback@test.com"
 }
 def versionProps = new Properties()
 file("../version.properties").withInputStream {
     stream -> versionProps.load(stream)
 }
-def releaseVersion = "${versionProps['rst.major_version']}" +
-        ".${versionProps['rst.minor_version']}" +
-        ".${versionProps['rst.version_code']}"
-archivesBaseName = "open-sms-locator-$releaseVersion"
+def releaseVersion = "${versionProps['llegue.major_version']}" +
+        ".${versionProps['llegue.minor_version']}" +
+        ".${versionProps['llegue.version_code']}"
+archivesBaseName = "llegue-$releaseVersion"
 
 android {
     compileSdkVersion 36
     defaultConfig {
-        applicationId "ru.rst.rescuesmstracker"
-        namespace "ru.rst.rescuesmstracker"
+        applicationId "app.llegue"
+        namespace "app.llegue"
         minSdkVersion 26
         targetSdkVersion 36
         versionCode String.format("%d%03d%04d",
-                versionProps['rst.major_version'] as Integer,
-                versionProps['rst.minor_version'] as Integer,
-                versionProps['rst.version_code'] as Integer) as Integer
+                versionProps['llegue.major_version'] as Integer,
+                versionProps['llegue.minor_version'] as Integer,
+                versionProps['llegue.version_code'] as Integer) as Integer
         versionName releaseVersion
-
-        buildConfigField "String", "FEEDBACK_EMAIL", "\"$feedbackEmail\""
     }
-    if (isRSTPublicRelease) {
+    if (isPublicRelease) {
         signingConfigs {
             config {
-                keyAlias privateProps['rst.keyAlias']
-                keyPassword privateProps['rst.keyPassword']
+                keyAlias privateProps['llegue.keyAlias']
+                keyPassword privateProps['llegue.keyPassword']
                 storeFile keyStoreFile
-                storePassword privateProps['rst.storePassword']
+                storePassword privateProps['llegue.storePassword']
             }
         }
     }
@@ -62,7 +53,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            if (isRSTPublicRelease) {
+            if (isPublicRelease) {
                 signingConfig signingConfigs.config
             }
         }
@@ -89,20 +80,9 @@ dependencies {
 
 task incrementVersion {
     doLast {
-        versionProps['rst.version_code'] = ((versionProps['rst.version_code'] as Integer) + 1).toString()
+        versionProps['llegue.version_code'] = ((versionProps['llegue.version_code'] as Integer) + 1).toString()
         file("../version.properties").withOutputStream {
             stream -> versionProps.store(stream, "version autoincrement")
         }
-    }
-}
-
-task pushVersion {
-    doLast {
-        println("Commiting version")
-        new ProcessBuilder("git", "commit", "-m", "[skip ci] Version autoincrement", "version.properties").start().waitFor()
-        println("Creating tag")
-        new ProcessBuilder("git", "tag", "-a", releaseVersion, "-m", "Release published").start().waitFor()
-        println("Pushing tag")
-        "git push --all --follow-tags".execute().waitFor()
     }
 }

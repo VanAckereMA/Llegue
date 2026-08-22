@@ -1,44 +1,47 @@
-# Open SMS Locator
-Our app helps find and rescue a missing person even if they’re unconscious and unable to use their phone.
+# Llegue
 
-It works without internet connection.
+Llegue avisa a alguien de confianza dónde estás, enviando tu ubicación por SMS.
 
-- For parents: text a code word to your child’s mobile phone to find out where they are;
-- For senior citizens: If you’re lost in the forest, you can easily communicate your coordinates to the rescue services, even if you are out of mobile internet coverage;
-- For hikers, hunters and extreme sports lovers: in case of injury, your friends or family may quickly locate your phone and call the ambulance;
-- Even if you drop your mobile phone out in the wild, you can easily locate it!
+No necesita internet en ningún extremo, y quien recibe el aviso no necesita
+tener la app instalada: le llega un mensaje de texto común con un link al mapa.
 
-It is free of charge and doesn’t require an online login.
+## Cómo funciona
 
-Three modes of operation:
-1. automatic reply with the coordinates to a code word text message;
-2. automatic texting of current coordinates on a regular interval (for instance, every hour);
-3. automatic texting of current coordinates to a trusted contact by pressing a hotkey.
+Activás una sesión de viaje eligiendo un único contacto de confianza, un nombre
+para el viaje y cada cuánto querés que se avise. A partir de ahí la app manda tu
+ubicación sola, en los intervalos que definiste. El contacto también puede
+pedirla en cualquier momento enviándote un SMS con la palabra clave que acordaron
+en el primer mensaje.
 
-It’s easy: just enter your trusted contact number and a code word (such as “1234”). If your phone receives a message containing your code word (“1234”), the application will automatically reply to the sender with a text message containing your current coordinates.
+Cada aviso que recibe el contacto incluye el link a Google Maps, cuándo será el
+próximo aviso y el nivel de batería de tu teléfono.
 
-It’s safe: the two phones communicate directly via SMS, without going online, and avoiding services of third parties.
+## Estado
 
-It’s thrifty: the application saves your battery life. It runs in the background and activates when it’s time to send a message with coordinates.
+En desarrollo. El MVP deja fuera, por ahora, la elección de un destino en el mapa
+y el acceso directo desde la notificación.
 
-It’s informative: a message contains phone’s current coordinates, their accuracy (in meters), exact time of locating and the battery power.
+## Cómo compilar
 
-**Note:** You will be charged for a standard text message according to your current mobile phone plan.
-It is a Beta version. Please, do not hesitate to report bugs!
+Requiere Android Studio con JDK 17 o superior y el SDK de Android 36.
 
-Localized to two languages (Russian and English, depending on your phone’s OS language)
+```
+./gradlew :app:assembleDebug
+```
 
-# How to build a signed APK
+El APK aparece en `app/build/outputs/apk/debug`.
 
-1. Create `privatedata` directory in the `app` folder
-1. Put your keystore in `privatedata` and rename it to `release.keystore`
-1. Create `private.properties` file in `privatedata` folder with the following properties:
-    - `rst.storePassword`
-    - `rst.keyPassword`
-    - `rst.keyAlias`
-    - `rst.storeFile`
-    - `rst.feedbackEmail`
-1. Increment the app version by running `./gradlew incrementVersion` in Terminal
-    - *(optionally)* Push changed `version.properties` file by running `./gradlew pushVersion`
-1. Run `RST_PUBLIC_RELEASE=true ./gradlew assembleRelease`
-1. APK appears in `app/build/outputs/apk/release` directory
+Para generar un APK firmado:
+
+1. Crear el directorio `privatedata` dentro de `app`.
+2. Poner ahí el keystore.
+3. Crear `app/privatedata/private.properties` con las propiedades
+   `llegue.storeFile`, `llegue.storePassword`, `llegue.keyAlias` y
+   `llegue.keyPassword`.
+4. Ejecutar `LLEGUE_PUBLIC_RELEASE=true ./gradlew assembleRelease`.
+
+## Licencia
+
+Llegue es software libre bajo la GNU General Public License v3, y deriva del
+proyecto [Open SMS Locator](https://github.com/rescue-sms-tracker), publicado
+bajo la misma licencia. Ver el archivo `LICENSE`.

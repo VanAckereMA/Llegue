@@ -22,7 +22,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name="ru.rescuesmstracker.RSTApplication"
+        android:name="app.llegue.RSTApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -30,7 +30,7 @@
         android:theme="@style/LlegueTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name="ru.rescuesmstracker.home.HomeActivity"
+            android:name="app.llegue.home.HomeActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
@@ -41,21 +41,21 @@
         </activity>
 
         <receiver
-            android:name="ru.rescuesmstracker.timer.SmsActionSendReceiver"
+            android:name="app.llegue.timer.SmsActionSendReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="ru.rescuesmstracker.timer.SmsActionSendReceiver.actionSendSms" />
+                <action android:name="app.llegue.timer.SmsActionSendReceiver.actionSendSms" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name="ru.rescuesmstracker.timer.SmsDeliveredReceiver"
+            android:name="app.llegue.timer.SmsDeliveredReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="ru.rescuesmstracker.timer.SmsDeliveredReceiver.actionDeliverySms" />
+                <action android:name="app.llegue.timer.SmsDeliveredReceiver.actionDeliverySms" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name="ru.rescuesmstracker.ControlSmsReceiver"
+            android:name="app.llegue.ControlSmsReceiver"
             android:exported="true"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter android:priority="100">
@@ -65,7 +65,7 @@
 
         <!-- Handle device boot up -->
         <receiver
-            android:name="ru.rescuesmstracker.BootReceiver"
+            android:name="app.llegue.BootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -76,7 +76,7 @@
         </receiver>
 
         <service
-            android:name="ru.rescuesmstracker.RSTForegroundService"
+            android:name="app.llegue.RSTForegroundService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="location" />
