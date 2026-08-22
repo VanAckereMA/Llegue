@@ -1,11 +1,24 @@
-*.iml
-*.keystore
-.gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-/build
-/captures
+# Gradle / Android build output
+build/
+.gradle/
+.kotlin/
+local.properties
+captures/
 .externalNativeBuild
-/.idea
+.cxx/
+
+# Firma de release
+*.keystore
+*.jks
+privatedata/
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
