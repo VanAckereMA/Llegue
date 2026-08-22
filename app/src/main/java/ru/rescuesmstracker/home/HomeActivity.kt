@@ -17,13 +17,19 @@
  * along with Open SMS Locator. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ru.rescuesmstracker.utils
+package ru.rescuesmstracker.home
 
-import android.content.Context
-import android.view.View
-import android.view.inputmethod.InputMethodManager
+import android.app.Activity
+import android.os.Bundle
+import ru.rst.rescuesmstracker.databinding.AHomeBinding
 
-fun hideKeyboard(focusedView: View) {
-    val imm = focusedView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.hideSoftInputFromWindow(focusedView.windowToken, 0)
+class HomeActivity : Activity() {
+
+    private lateinit var binding: AHomeBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = AHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+    }
 }

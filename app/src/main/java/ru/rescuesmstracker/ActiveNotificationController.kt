@@ -29,7 +29,7 @@ import android.content.Intent
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import ru.rescuesmstracker.extensions.color
-import ru.rescuesmstracker.timer.ActivityTimer2
+import ru.rescuesmstracker.home.HomeActivity
 import ru.rescuesmstracker.timer.model.ScheduledSmsModel
 import ru.rst.rescuesmstracker.R
 
@@ -45,7 +45,7 @@ object ActiveNotificationController {
         val appPendingIntent = PendingIntent.getActivity(
                 context,
                 0,
-                Intent(context, ActivityTimer2::class.java),
+                Intent(context, HomeActivity::class.java),
                 PendingIntent.FLAG_UPDATE_CURRENT)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

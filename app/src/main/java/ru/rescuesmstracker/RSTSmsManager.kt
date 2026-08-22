@@ -82,14 +82,14 @@ interface RSTSmsManager {
             try {
                 delegate.sendTextMessage(context, destinationAddress, scAddress, text, sentIntent, deliveryIntent)
             } catch (se: SecurityException) {
-                PermissionsActivity.checkPermissions(context)
+                Log.w(logTag, "Missing permissions to send SMS", se)
             }
         }
 
         override fun canSelectSubscription(context: Context): Boolean = try {
             delegate.canSelectSubscription(context)
         } catch (se: SecurityException) {
-            PermissionsActivity.checkPermissions(context)
+            Log.w(logTag, "Missing permissions to read SIM subscriptions", se)
             false
         }
 
@@ -99,6 +99,8 @@ interface RSTSmsManager {
                 delegate.getAllAvailableSimIds(context)
 
         companion object {
+            private const val logTag = "RSTSmsManager"
+
             protected fun deliverErrorIfPossible(sentIntent: PendingIntent?) {
                 sentIntent?.send(SmsManager.RESULT_ERROR_RADIO_OFF)
             }

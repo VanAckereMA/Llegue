@@ -29,7 +29,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import ru.rescuesmstracker.PermissionsActivity
+import ru.rescuesmstracker.AppPermissions
 import ru.rescuesmstracker.data.Contact
 
 class OnBoardingContactsProvider {
@@ -49,7 +49,7 @@ class OnBoardingContactsProvider {
     private val SELECTION = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " LIKE ?"
 
     fun queryContacts(activity: Activity, query: String, callback: ContactsCallback): Disposable? {
-        if (!PermissionsActivity.checkPermissions(activity)) {
+        if (AppPermissions.canReadContacts(activity)) {
             return Observable
                     .create<Cursor> { e ->
                         run {

@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name" translatable="false">Safety Tracker: GPS via SMS</string>
+    <string name="app_title" translatable="false">Llegue</string>
+    <string name="home_tagline">Compartí tu ubicación con\ntu contacto de confianza.</string>
+    <string name="home_create_session">Crear sesión</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="sms_pattern" translatable="false">%s\n%s\nacc=%s\nbattery=%s\n</string>
