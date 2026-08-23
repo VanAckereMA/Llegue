@@ -25,13 +25,37 @@ próximo aviso, porque no hay uno.
 
 ## Estado
 
-En desarrollo. Por ahora está hecha la base del proyecto: se demolió la interfaz
-heredada, se migró a AndroidX apuntando a Android 16 (API 36) y se rehizo la
-marca. Todavía faltan el modelo de sesiones, el programador de envíos y las
-pantallas definitivas.
+El MVP está completo: se puede crear una sesión, activarla y avisar la ubicación
+por SMS, sin internet en ningún extremo.
 
-El MVP deja fuera, de forma deliberada, la elección de un destino en el mapa y el
-acceso directo desde la notificación.
+### Qué incluye este MVP
+
+- **Home.** Lista de sesiones con nombre del viaje, contacto, palabra clave,
+  horario de inicio y fin, intervalo y próximo envío. Botón para crear una
+  sesión nueva. Tema claro y oscuro.
+- **Formulario.** Nombre del viaje, un único contacto de confianza, palabra
+  clave, intervalo opcional (mínimo 5 minutos, o sin intervalo) y hora de
+  finalización opcional. Se puede editar o eliminar una sesión después.
+- **Activar y pausar.** Un interruptor en la tarjeta prende o apaga la sesión
+  sin borrarla.
+- **Primer aviso.** Al iniciar, la app busca GPS y manda el primer SMS al
+  contacto: palabra clave, link a Google Maps, próximo envío (si hay intervalo)
+  y nivel de batería.
+- **Envíos programados.** Con intervalo, el GPS se pide unos 3 minutos antes
+  para que el SMS salga a horario. Las alarmas siguen funcionando con el
+  teléfono en reposo y se reprograman al reiniciar el equipo.
+- **Pedido del contacto.** Si el contacto responde con la palabra clave desde
+  su número, recibe la ubicación en el momento, aunque la sesión no tenga
+  intervalo.
+- **Sin señal GPS.** Se reutiliza la última ubicación una sola vez y el SMS lo
+  aclara. A los 3 fallos seguidos, la sesión se cierra.
+- **Notificación.** Mientras hay una sesión activa, queda una notificación
+  persistente en el teléfono.
+
+### Qué queda fuera, a propósito
+
+- Elegir un destino en el mapa y avisar al acercarse.
+- Un acceso directo en la notificación para marcar que llegaste.
 
 ## Requisitos
 
