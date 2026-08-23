@@ -25,6 +25,7 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import app.llegue.analytics.Analytics
 import app.llegue.data.migration.Migration
+import app.llegue.sessions.SessionScheduler
 import app.llegue.timer.model.ScheduledSmsModel
 import app.llegue.utils.AppUpdateManager
 
@@ -51,5 +52,6 @@ class RSTApplication : Application() {
         if (ScheduledSmsModel.isSmsSendingEnabled(this)) {
             RSTForegroundService.start(this)
         }
+        Background.execute { SessionScheduler.rescheduleAll(this) }
     }
 }

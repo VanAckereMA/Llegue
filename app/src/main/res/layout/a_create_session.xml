@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/screenBackground"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="32dp">
+
+        <TextView
+            android:id="@+id/formTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/form_title"
+            android:textColor="?attr/contentPrimary"
+            android:textSize="28sp" />
+
+        <EditText
+            android:id="@+id/tripName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_input"
+            android:hint="@string/form_trip_name"
+            android:inputType="textCapSentences"
+            android:maxLines="1"
+            android:padding="14dp"
+            android:textColor="?attr/contentPrimary"
+            android:textColorHint="?attr/contentHint"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_input"
+            android:drawableEnd="@android:drawable/ic_input_add"
+            android:drawableTint="?attr/contentPrimary"
+            android:gravity="center_vertical"
+            android:padding="14dp"
+            android:text="@string/form_contact"
+            android:textColor="?attr/contentHint"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/codeWord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_input"
+            android:hint="@string/form_code_word"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="14dp"
+            android:textColor="?attr/contentPrimary"
+            android:textColorHint="?attr/contentHint"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/form_code_word_hint"
+            android:textColor="?attr/contentSecondary"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/form_interval_title"
+            android:textColor="?attr/contentPrimary"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <NumberPicker
+                android:id="@+id/intervalUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <NumberPicker
+                android:id="@+id/intervalValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/form_has_end"
+            android:textColor="?attr/contentPrimary"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/hasEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/endYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="?attr/contentPrimary"
+                android:text="@string/form_yes"
+                android:textColor="?attr/contentPrimary"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/endNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:buttonTint="?attr/contentPrimary"
+                android:checked="true"
+                android:text="@string/form_no"
+                android:textColor="?attr/contentPrimary"
+                android:textSize="16sp" />
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/endTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_outlined_button"
+            android:padding="14dp"
+            android:text="@string/form_enter_time"
+            android:textAllCaps="false"
+            android:textColor="?attr/contentPrimary"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/noEndHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/form_no_end_hint"
+            android:textColor="?attr/contentSecondary"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/bg_brand_button"
+            android:padding="14dp"
+            android:text="@string/form_start"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@color/transparent"
+            android:padding="14dp"
+            android:text="@string/form_cancel"
+            android:textAllCaps="false"
+            android:textColor="?attr/contentSecondary"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</ScrollView>

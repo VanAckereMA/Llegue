@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="screenBackground" format="color" />
+    <attr name="contentPrimary" format="color" />
+    <attr name="contentSecondary" format="color" />
+    <attr name="contentHint" format="color" />
+    <attr name="cardBackground" format="color" />
+    <attr name="cardStroke" format="color" />
+    <attr name="strokeColor" format="color" />
+    <attr name="switchTrackOff" format="color" />
+    <attr name="switchThumb" format="color" />
+    <attr name="statusInactive" format="color" />
+    <attr name="themeSwitchTrack" format="color" />
+    <attr name="themeSwitchThumb" format="color" />
+</resources>

@@ -4,6 +4,58 @@
 
     <string name="home_tagline">Compartí tu ubicación con\ntu contacto de confianza.</string>
     <string name="home_create_session">Crear sesión</string>
+    <string name="home_sessions_title">sesiones</string>
+    <string name="theme_switch">Cambiar tema</string>
+    <string name="theme_switch_to_light">Cambiar a tema claro</string>
+    <string name="theme_switch_to_dark">Cambiar a tema oscuro</string>
+    <string name="theme_tab_show">Mostrar cambio de tema</string>
+    <string name="theme_tab_hide">Ocultar cambio de tema</string>
+    <string name="theme_tab_open" translatable="false">&lt;&lt;</string>
+    <string name="theme_tab_close" translatable="false">&gt;&gt;</string>
+    <string name="home_add_session" translatable="false">+</string>
+
+    <string name="form_title">Crea una sesión</string>
+    <string name="form_title_edit">Editar sesión</string>
+    <string name="form_trip_name">Nombre del viaje</string>
+    <string name="form_contact">Contacto de confianza</string>
+    <string name="form_code_word">Ingresa la palabra clave</string>
+    <string name="form_code_word_hint">Con la palabra clave tu contacto podrá consultar tu ubicación.</string>
+    <string name="form_interval_title">Selecciona el intervalo de envío del SMS.</string>
+    <string name="form_interval_none">Sin intervalo</string>
+    <string name="form_interval_minutes">Min</string>
+    <string name="form_interval_hours">Horas</string>
+    <string name="form_interval_days">Días</string>
+    <string name="form_has_end">¿Tiene fecha de finalización?</string>
+    <string name="form_yes">Sí</string>
+    <string name="form_no">No</string>
+    <string name="form_enter_time">Ingresa Hora</string>
+    <string name="form_no_end_hint">Recordá que tu contacto podrá consultar tu ubicación en cualquier momento.</string>
+    <string name="form_start">Iniciar sesión</string>
+    <string name="form_save">Guardar</string>
+    <string name="form_cancel">Cancelar</string>
+
+    <string name="form_error_trip_name">Ponele un nombre al viaje</string>
+    <string name="form_error_contact">Elegí un contacto de confianza</string>
+    <string name="form_error_code_word">Elegí una palabra clave</string>
+    <string name="form_error_end_time">Indicá a qué hora termina la sesión</string>
+
+    <string name="permissions_needed">Llegue necesita permiso para enviar y recibir SMS y para acceder a tu ubicación</string>
+    <string name="sending_first_sms">Buscando tu ubicación y enviando el primer aviso…</string>
+    <string name="first_sms_sent">Aviso enviado a %s</string>
+    <string name="first_sms_failed">No se pudo enviar el aviso a %s</string>
+
+    <string name="session_contact_format" translatable="false">%s</string>
+    <string name="session_code_word_format">Clave: %s</string>
+    <string name="session_interval_format">Intervalo: %d min</string>
+    <string name="session_no_interval">Sin intervalo de envío</string>
+    <string name="session_start_format">inicio: %s hs</string>
+    <string name="session_start_end_format">inicio: %1$s hs - %2$s hs</string>
+    <string name="session_next_send_format">Próximo envío: en %d min</string>
+    <string name="session_inactive_status">desactivado</string>
+    <string name="session_updated">Sesión actualizada</string>
+    <string name="session_delete_title">Eliminar sesión</string>
+    <string name="session_delete_message">¿Querés eliminar \"%s\"?</string>
+    <string name="session_delete_confirm">Eliminar</string>
 
     <string name="sms_pattern" translatable="false">%s\n%s\nacc=%s\nbattery=%s\n</string>
     <string name="sms_error_message">No se pudo enviar el SMS</string>

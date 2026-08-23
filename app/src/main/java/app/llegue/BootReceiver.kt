@@ -25,6 +25,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import app.llegue.sessions.SessionScheduler
 import app.llegue.timer.model.ScheduledSmsModel
 
 class BootReceiver : BroadcastReceiver() {
@@ -41,6 +42,15 @@ class BootReceiver : BroadcastReceiver() {
             Log.d(TAG, "SMS scheduled after device boot up")
         } else {
             Log.d(TAG, "SMS NOT scheduled after device boot up")
+        }
+
+        val pending = goAsync()
+        Background.execute {
+            try {
+                SessionScheduler.rescheduleAll(context.applicationContext)
+            } finally {
+                pending.finish()
+            }
         }
     }
 }

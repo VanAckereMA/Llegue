@@ -10,7 +10,16 @@
     <color name="white_50_alpha">#80FFFFFF</color>
     <color name="white_70_alpha">#B3FFFFFF</color>
     <color name="black">@android:color/black</color>
+    <color name="black_30_alpha">#4D000000</color>
     <color name="black_40_alpha">#66000000</color>
+    <color name="black_50_alpha">#80000000</color>
+    <color name="black_70_alpha">#B3000000</color>
+    <color name="light_background">#FFF7F5F2</color>
+    <color name="light_card">#FFFFFFFF</color>
+    <color name="light_stroke">#1F000000</color>
+    <color name="theme_switch_track_dark">#FF2C2C2C</color>
+    <color name="theme_switch_track_light">#FFE8E4DC</color>
+    <color name="moon_icon">#FF1A1A2E</color>
     <color name="transparent">@android:color/transparent</color>
 
     <color name="amber_600">#FFB300</color>
@@ -22,4 +31,8 @@
     <color name="grey_900">#FF212121</color>
 
     <color name="llegue_brand">#6D1A2A</color>
+    <color name="llegue_brand_highlight">#E85A6C</color>
+    <color name="session_card">#1F1F1F</color>
+    <color name="session_switch_track_off">#3D3D3D</color>
+    <color name="session_switch_track_off_light">#BDBDBD</color>
 </resources>

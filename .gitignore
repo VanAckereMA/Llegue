@@ -11,6 +11,14 @@ captures/
 *.keystore
 *.jks
 privatedata/
+google-services.json
+
+# Cursor: logs de debug locales (pueden incluir sesiones y ubicacion)
+.cursor/
+*.log
+
+# Capturas de dispositivo: pueden incluir contactos, claves y ubicacion
+capturas_demo/
 
 # Frames de diseño: referencias de trabajo, no forman parte de la app
 frames/

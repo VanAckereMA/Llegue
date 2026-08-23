@@ -5,5 +5,43 @@
         <item name="android:textColorSecondary">@color/white_70_alpha</item>
         <item name="android:statusBarColor">@color/black</item>
         <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="screenBackground">@color/black</item>
+        <item name="contentPrimary">@color/white</item>
+        <item name="contentSecondary">@color/white_70_alpha</item>
+        <item name="contentHint">@color/white_50_alpha</item>
+        <item name="cardBackground">@color/session_card</item>
+        <item name="cardStroke">@color/transparent</item>
+        <item name="strokeColor">@color/white</item>
+        <item name="switchTrackOff">@color/session_switch_track_off</item>
+        <item name="switchThumb">@color/white</item>
+        <item name="statusInactive">@color/white_30_alpha</item>
+        <item name="themeSwitchTrack">@color/theme_switch_track_dark</item>
+        <item name="themeSwitchThumb">@color/white</item>
+    </style>
+
+    <style name="LlegueTheme.Light" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/light_background</item>
+        <item name="android:textColorPrimary">@color/grey_900</item>
+        <item name="android:textColorSecondary">@color/black_70_alpha</item>
+        <item name="android:statusBarColor">@color/light_background</item>
+        <item name="android:navigationBarColor">@color/light_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="screenBackground">@color/light_background</item>
+        <item name="contentPrimary">@color/grey_900</item>
+        <item name="contentSecondary">@color/black_70_alpha</item>
+        <item name="contentHint">@color/black_50_alpha</item>
+        <item name="cardBackground">@color/light_card</item>
+        <item name="cardStroke">@color/light_stroke</item>
+        <item name="strokeColor">@color/grey_900</item>
+        <item name="switchTrackOff">@color/session_switch_track_off_light</item>
+        <item name="switchThumb">@color/white</item>
+        <item name="statusInactive">@color/black_30_alpha</item>
+        <item name="themeSwitchTrack">@color/theme_switch_track_light</item>
+        <item name="themeSwitchThumb">@color/white</item>
     </style>
 </resources>

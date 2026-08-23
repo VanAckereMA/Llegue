@@ -24,6 +24,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import app.llegue.ActiveNotificationController.FOREGROUND_NOTIFICATION_ID
@@ -91,7 +92,15 @@ class RSTForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(FOREGROUND_NOTIFICATION_ID, createForegroundNotification(this))
+        val notification = createForegroundNotification(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(
+                    FOREGROUND_NOTIFICATION_ID,
+                    notification,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+        } else {
+            startForeground(FOREGROUND_NOTIFICATION_ID, notification)
+        }
 
         return START_STICKY
     }

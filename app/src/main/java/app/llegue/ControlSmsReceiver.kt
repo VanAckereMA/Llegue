@@ -20,65 +20,69 @@
 
 package app.llegue
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import android.os.PowerManager
 import android.provider.Telephony
+import android.telephony.PhoneNumberUtils
 import android.telephony.SmsMessage
 import android.util.Log
-import app.llegue.contacts.ContactsController
-import app.llegue.data.Sms
-import app.llegue.settings.RSTPreferences
-import app.llegue.timer.model.ForceSmsModel
+import app.llegue.sessions.LlegueDatabase
+import app.llegue.sessions.SessionCycle
+import app.llegue.sessions.SessionScheduler
+import app.llegue.sms.KeywordMatcher
 
 class ControlSmsReceiver : BroadcastReceiver() {
     private val logTag = "ControlSmsReceiver"
-    private val actionSmsReceived: String = "android.provider.Telephony.SMS_RECEIVED"
 
     override fun onReceive(context: Context, intent: Intent?) {
-        if (!RSTForegroundService.started) {
-            Log.i(logTag, "SMS received, but app is turned off")
-            return
+        if (intent?.action != Telephony.Sms.Intents.SMS_RECEIVED_ACTION) return
+        val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
+        val app = context.applicationContext
+        val wakeLock = (app.getSystemService(Context.POWER_SERVICE) as PowerManager)
+                .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "llegue:sms-received")
+        wakeLock.setReferenceCounted(false)
+        wakeLock.acquire(90_000L)
+        try {
+            RSTForegroundService.start(app)
+        } catch (e: Exception) {
+            Log.w(logTag, "No se pudo iniciar el servicio al recibir SMS", e)
         }
-        intent?.action?.let { action ->
-            if (actionSmsReceived.compareTo(action, true) == 0) {
-                val whoCanRequestLocation = RSTPreferences.whoCanRequestLocation(context)
-                val messages = getMessagesFromIntent(intent)
-                Log.i(logTag, "Received sms messages: " + messages.map { message ->
-                    "[adr:${message?.originatingAddress}, msg:${message?.messageBody}]"
-                })
-
-                val destinationContacts = whoCanRequestLocation.validator.getAllSmsDestinations(
-                        context = context,
-                        smsMessages = messages,
-                        trustedContacts = ContactsController.loadAllContacts()
-                )
-                if (destinationContacts.isNotEmpty()) {
-                    ForceSmsModel.forceSendLocation(
-                            context = context,
-                            smsType = Sms.Type.LOCATION_FOR_CODE_WORD,
-                            contacts = destinationContacts,
-                            listener = null
-                    )
-                }
+        Background.execute {
+            try {
+                replyIfKeyword(app, messages)
+            } catch (e: Exception) {
+                Log.e(logTag, "Error al responder un SMS con palabra clave", e)
+            } finally {
+                if (wakeLock.isHeld) wakeLock.release()
+                SessionScheduler.syncForegroundService(app)
             }
         }
     }
 
-    @SuppressLint("DeprecatedApi")
-    private fun getMessagesFromIntent(intent: Intent): Array<SmsMessage?> {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Telephony.Sms.Intents.getMessagesFromIntent(intent)
-        } else {
-            val pdus = intent.getSerializableExtra("pdus") as Array<*>
-            val messages = arrayOfNulls<SmsMessage>(pdus.size)
-            for (index in messages.indices) {
-                val pdu = pdus[index] as? ByteArray?
-                messages[index] = SmsMessage.createFromPdu(pdu)
+    private fun replyIfKeyword(context: Context, messages: Array<SmsMessage?>) {
+        val sessions = LlegueDatabase.get(context).sessions().active()
+        if (sessions.isEmpty()) return
+
+        groupedBodies(messages).forEach { (phone, body) ->
+            val session = KeywordMatcher.findSession(sessions, phone, body) { left, right ->
+                PhoneNumberUtils.compare(context, left, right)
             }
-            messages
+            if (session == null) {
+                Log.i(logTag, "SMS de $phone ignorado: no coincide con una sesion activa")
+                return@forEach
+            }
+            Log.i(logTag, "Palabra clave de sesion ${session.id} recibida de $phone")
+            SessionCycle.sendOnDemand(context, session.id)
         }
     }
+
+    private fun groupedBodies(messages: Array<SmsMessage?>): List<Pair<String, String>> =
+            messages.filterNotNull()
+                    .groupBy { it.originatingAddress.orEmpty() }
+                    .filterKeys { it.isNotBlank() }
+                    .map { (phone, parts) ->
+                        phone to parts.joinToString("") { it.messageBody.orEmpty() }
+                    }
 }
