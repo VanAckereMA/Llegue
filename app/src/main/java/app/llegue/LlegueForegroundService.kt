@@ -30,7 +30,7 @@ import android.os.IBinder
 import app.llegue.ActiveNotificationController.FOREGROUND_NOTIFICATION_ID
 import app.llegue.ActiveNotificationController.createForegroundNotification
 
-class RSTForegroundService : Service() {
+class LlegueForegroundService : Service() {
 
     companion object {
 
@@ -61,12 +61,22 @@ class RSTForegroundService : Service() {
             return false
         }
 
-        private fun buildIntent(context: Context) = Intent(context, RSTForegroundService::class.java)
+        private fun buildIntent(context: Context) = Intent(context, LlegueForegroundService::class.java)
 
         private val Context.servicePreferences: ServicePreferences
-            get() = ServicePreferences(
-                    getSharedPreferences("RSTForegroundService", Context.MODE_PRIVATE)
-            )
+            get() {
+                val current = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                migrateLegacyPrefs(this, current)
+                return ServicePreferences(current)
+            }
+
+        private fun migrateLegacyPrefs(context: Context, current: SharedPreferences) {
+            if (current.contains(KEY_STARTED)) return
+            val legacy = context.getSharedPreferences(LEGACY_PREFS_NAME, Context.MODE_PRIVATE)
+            if (!legacy.contains(KEY_STARTED)) return
+            current.edit().putBoolean(KEY_STARTED, legacy.getBoolean(KEY_STARTED, false)).apply()
+            legacy.edit().clear().apply()
+        }
 
         private class ServicePreferences(val prefs: SharedPreferences) {
 
@@ -107,4 +117,6 @@ class RSTForegroundService : Service() {
 
 }
 
+private const val PREFS_NAME = "LlegueForegroundService"
+private const val LEGACY_PREFS_NAME = "RSTForegroundService"
 private const val KEY_STARTED = "started"

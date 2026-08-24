@@ -18,31 +18,15 @@
  * along with Llegue. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package app.llegue.contacts
+package app.llegue
 
-import io.realm.Realm
-import app.llegue.data.Contact
+import android.app.Application
+import app.llegue.sessions.SessionScheduler
 
-object ContactsController {
+class LlegueApplication : Application() {
 
-    private val realm = Realm.getDefaultInstance()!!
-
-    fun loadAllContacts(): List<Contact> = realm.where(Contact::class.java).findAll()
-
-    fun loadTopContact(): Contact? = realm.where(Contact::class.java).findFirst()
-
-    fun addContact(contact: Contact): Contact {
-        try {
-            realm.beginTransaction()
-            return realm.copyToRealm(contact)
-        } finally {
-            realm.commitTransaction()
-        }
-    }
-
-    fun removeContact(contact: Contact) {
-        realm.executeTransaction {
-            contact.deleteFromRealm()
-        }
+    override fun onCreate() {
+        super.onCreate()
+        Background.execute { SessionScheduler.rescheduleAll(this) }
     }
 }

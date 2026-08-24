@@ -32,8 +32,8 @@ import android.widget.NumberPicker
 import android.widget.Toast
 import app.llegue.Background
 import app.llegue.R
-import app.llegue.RSTBatteryManager
-import app.llegue.RSTForegroundService
+import app.llegue.LlegueBatteryManager
+import app.llegue.LlegueForegroundService
 import app.llegue.databinding.ACreateSessionBinding
 import app.llegue.location.LocationFinder
 import app.llegue.sms.SessionSms
@@ -271,7 +271,7 @@ class CreateSessionActivity : Activity() {
         binding.start.isEnabled = false
         toast(getString(R.string.sending_first_sms))
         if (session.intervalMinutes != null) {
-            RSTForegroundService.start(this)
+            LlegueForegroundService.start(this)
         }
 
         val context = applicationContext
@@ -282,7 +282,7 @@ class CreateSessionActivity : Activity() {
                 LlegueDatabase.get(context).sessions()
                         .saveLocation(id, location.latitude, location.longitude, System.currentTimeMillis())
             }
-            val battery = RSTBatteryManager.getCurrentBatteryLevel(context)
+            val battery = LlegueBatteryManager.getCurrentBatteryLevel(context)
             val text = SessionSms.compose(session, location, battery)
             val sent = SmsGateway.send(context, session.contactPhone, text)
             SessionScheduler.afterFirstSend(context, session.copy(id = id))

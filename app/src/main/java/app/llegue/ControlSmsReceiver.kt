@@ -45,7 +45,7 @@ class ControlSmsReceiver : BroadcastReceiver() {
         wakeLock.setReferenceCounted(false)
         wakeLock.acquire(90_000L)
         try {
-            RSTForegroundService.start(app)
+            LlegueForegroundService.start(app)
         } catch (e: Exception) {
             Log.w(logTag, "No se pudo iniciar el servicio al recibir SMS", e)
         }

@@ -23,8 +23,8 @@ import android.content.Context
 import android.location.Location
 import android.os.PowerManager
 import android.util.Log
-import app.llegue.RSTBatteryManager
-import app.llegue.RSTForegroundService
+import app.llegue.LlegueBatteryManager
+import app.llegue.LlegueForegroundService
 import app.llegue.location.LocationFinder
 import app.llegue.sms.SessionSms
 import app.llegue.sms.SmsGateway
@@ -79,7 +79,7 @@ object SessionCycle {
             dao.setGpsStatus(session.id, decision.misses, decision.reused || session.reusedLocation)
         }
 
-        val battery = RSTBatteryManager.getCurrentBatteryLevel(context)
+        val battery = LlegueBatteryManager.getCurrentBatteryLevel(context)
         val text = SessionSms.compose(current, decision.location, battery, decision.reused)
         SmsGateway.send(context, current.contactPhone, text)
         SessionScheduler.scheduleNext(context, current, System.currentTimeMillis())
@@ -107,7 +107,7 @@ object SessionCycle {
         if (!stillRunnable(context, session)) return
 
         try {
-            RSTForegroundService.start(context)
+            LlegueForegroundService.start(context)
         } catch (e: Exception) {
             Log.w(logTag, "No se pudo abrir el servicio para GPS por palabra clave", e)
         }
@@ -130,7 +130,7 @@ object SessionCycle {
         }
 
         val current = dao.byId(session.id) ?: session
-        val battery = RSTBatteryManager.getCurrentBatteryLevel(context)
+        val battery = LlegueBatteryManager.getCurrentBatteryLevel(context)
         val text = SessionSms.compose(current, location, battery, reused)
         val sent = SmsGateway.send(context, current.contactPhone, text)
         Log.d(logTag, "SMS por clave sesion $sessionId enviado=$sent")

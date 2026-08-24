@@ -63,7 +63,7 @@ object ActiveNotificationController {
 
     fun updateForegroundNotification(context: Context) {
         val notificationManager = notificationManager(context)
-        if (RSTForegroundService.started) {
+        if (LlegueForegroundService.started) {
             notificationManager.notify(FOREGROUND_NOTIFICATION_ID, createForegroundNotification(context))
         } else {
             notificationManager.cancel(FOREGROUND_NOTIFICATION_ID)

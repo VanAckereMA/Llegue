@@ -9,7 +9,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import kotlin.math.roundToInt
 
-object RSTBatteryManager {
+object LlegueBatteryManager {
 
     fun getCurrentBatteryLevel(context: Context): Int =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

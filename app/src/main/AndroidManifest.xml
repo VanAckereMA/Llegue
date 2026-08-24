@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
@@ -23,7 +22,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name="app.llegue.RSTApplication"
+        android:name="app.llegue.LlegueApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
@@ -58,20 +57,6 @@
         </receiver>
 
         <receiver
-            android:name="app.llegue.timer.SmsActionSendReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="app.llegue.timer.SmsActionSendReceiver.actionSendSms" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="app.llegue.timer.SmsDeliveredReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="app.llegue.timer.SmsDeliveredReceiver.actionDeliverySms" />
-            </intent-filter>
-        </receiver>
-        <receiver
             android:name="app.llegue.ControlSmsReceiver"
             android:exported="true"
             android:permission="android.permission.BROADCAST_SMS">
@@ -93,7 +78,7 @@
         </receiver>
 
         <service
-            android:name="app.llegue.RSTForegroundService"
+            android:name="app.llegue.LlegueForegroundService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="location" />

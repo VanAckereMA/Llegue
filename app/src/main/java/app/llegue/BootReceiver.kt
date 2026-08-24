@@ -26,22 +26,15 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import app.llegue.sessions.SessionScheduler
-import app.llegue.timer.model.ScheduledSmsModel
 
 class BootReceiver : BroadcastReceiver() {
 
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
     override fun onReceive(context: Context, intent: Intent?) {
-        if (RSTForegroundService.ping(context)) {
+        if (LlegueForegroundService.ping(context)) {
             Log.d(TAG, "Service started after device boot up")
         } else {
             Log.d(TAG, "Service NOT started after device boot up")
-        }
-
-        if (ScheduledSmsModel.reschedule(context)) {
-            Log.d(TAG, "SMS scheduled after device boot up")
-        } else {
-            Log.d(TAG, "SMS NOT scheduled after device boot up")
         }
 
         val pending = goAsync()

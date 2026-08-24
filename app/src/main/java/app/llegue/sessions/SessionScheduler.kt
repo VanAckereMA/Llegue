@@ -26,8 +26,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import app.llegue.Background
-import app.llegue.RSTForegroundService
-import app.llegue.timer.model.ScheduledSmsModel
+import app.llegue.LlegueForegroundService
 import java.util.concurrent.TimeUnit
 
 object SessionScheduler {
@@ -153,15 +152,14 @@ object SessionScheduler {
 
     fun syncForegroundService(context: Context) {
         val keepAlive = dao(context).activeWithInterval().isNotEmpty()
-                || ScheduledSmsModel.isSmsSendingEnabled(context)
         if (keepAlive) {
             try {
-                RSTForegroundService.start(context)
+                LlegueForegroundService.start(context)
             } catch (e: Exception) {
                 Log.w(logTag, "No se pudo iniciar el servicio en primer plano", e)
             }
         } else {
-            RSTForegroundService.stop(context)
+            LlegueForegroundService.stop(context)
         }
     }
 

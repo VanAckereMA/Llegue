@@ -57,26 +57,7 @@
     <string name="session_delete_message">¿Querés eliminar \"%s\"?</string>
     <string name="session_delete_confirm">Eliminar</string>
 
-    <string name="sms_pattern" translatable="false">%s\n%s\nacc=%s\nbattery=%s\n</string>
-    <string name="sms_error_message">No se pudo enviar el SMS</string>
-
-    <string name="sms_count_format">%s mensajes</string>
-    <string name="sms_count_infinite">Sin límite</string>
-    <string name="interval_format">%s minutos</string>
-    <string name="format_custom">Ingresar manualmente</string>
-
-    <string name="format_degrees_example" translatable="false">Ndd.ddddd° Eddd.ddddd°</string>
-    <string name="format_seconds_example" translatable="false">Ndd°mm′ss.sssss″ Eddd°mm′ss.sssss″</string>
-    <string name="format_minutes_example" translatable="false">Ndd°mm.mmmmm′ Eddd°mm.mmmmm′</string>
-    <string name="format_google_maps_example" translatable="false">Google Maps</string>
-    <string name="format_navitel_example" translatable="false">Navitel</string>
-
-    <string name="settings_send_location_to_anyone">Solo a contactos de confianza</string>
-    <string name="settings_send_location_by_codeword">Cualquiera con la palabra clave</string>
-
     <string name="foreground_notification_chanel_name">Sesión de Llegue</string>
     <string name="foreground_notification_title">Sesión activa</string>
     <string name="foreground_notification_periodic_sms_subtitle">Enviando tu ubicación por SMS</string>
-
-    <string name="sim" translatable="false">SIM %s</string>
 </resources>
