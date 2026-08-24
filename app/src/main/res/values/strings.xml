@@ -40,6 +40,10 @@
     <string name="form_error_end_time">Indicá a qué hora termina la sesión</string>
 
     <string name="permissions_needed">Llegue necesita permiso para enviar y recibir SMS y para acceder a tu ubicación</string>
+    <string name="exact_alarm_title">Los envíos programados necesitan una alarma exacta</string>
+    <string name="exact_alarm_message">Llegue necesita el permiso de reloj para enviar el SMS en el intervalo que elegiste, esto permite enviarlo incluso con la pantalla apagada. Android pide que lo autorices en Ajustes → Alarmas y recordatorios.</string>
+    <string name="exact_alarm_open_settings">Ir a Ajustes</string>
+    <string name="exact_alarm_needed">Sin este permiso los SMS programados no salen a horario. Elegí “sin intervalo” o activalo en Ajustes.</string>
     <string name="sending_first_sms">Buscando tu ubicación y enviando el primer aviso…</string>
     <string name="first_sms_sent">Aviso enviado a %s</string>
     <string name="first_sms_failed">No se pudo enviar el aviso a %s</string>

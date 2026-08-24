@@ -21,6 +21,7 @@ package app.llegue.sessions
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -50,6 +51,7 @@ class CreateSessionActivity : Activity() {
     private var endHour: Int? = null
     private var endMinute: Int? = null
     private var editingId: Long = 0
+    private var waitingForExactAlarm = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppTheme.apply(this)
@@ -72,6 +74,7 @@ class CreateSessionActivity : Activity() {
         binding.cancel.setOnClickListener { finish() }
 
         editingId = intent.getLongExtra(EXTRA_SESSION_ID, 0L)
+        waitingForExactAlarm = savedInstanceState?.getBoolean(KEY_WAITING_EXACT_ALARM) ?: false
         if (editingId != 0L) {
             binding.formTitle.setText(R.string.form_title_edit)
             binding.start.setText(R.string.form_save)
@@ -82,6 +85,22 @@ class CreateSessionActivity : Activity() {
                     bindSession(session)
                 }
             }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_WAITING_EXACT_ALARM, waitingForExactAlarm)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!waitingForExactAlarm) return
+        waitingForExactAlarm = false
+        if (ExactAlarmAccess.canSchedule(this)) {
+            onStartRequested()
+        } else {
+            toast(getString(R.string.exact_alarm_needed))
         }
     }
 
@@ -229,7 +248,12 @@ class CreateSessionActivity : Activity() {
             return
         }
 
+        continueStart()
+    }
+
+    private fun continueStart() {
         if (editingId != 0L) {
+            if (!ensureExactAlarmIfNeeded()) return
             saveEdit()
             return
         }
@@ -242,7 +266,29 @@ class CreateSessionActivity : Activity() {
             return
         }
 
+        if (!ensureExactAlarmIfNeeded()) return
         saveAndSend()
+    }
+
+    private fun ensureExactAlarmIfNeeded(): Boolean {
+        if (selectedIntervalMinutes() == null) return true
+        if (ExactAlarmAccess.canSchedule(this)) return true
+        AlertDialog.Builder(this)
+                .setTitle(R.string.exact_alarm_title)
+                .setMessage(R.string.exact_alarm_message)
+                .setPositiveButton(R.string.exact_alarm_open_settings) { _, _ -> openExactAlarmSettings() }
+                .show()
+        return false
+    }
+
+    private fun openExactAlarmSettings() {
+        val intent = ExactAlarmAccess.requestIntent(this)
+        if (intent == null) {
+            continueStart()
+            return
+        }
+        waitingForExactAlarm = true
+        startActivity(intent)
     }
 
     override fun onRequestPermissionsResult(
@@ -252,7 +298,7 @@ class CreateSessionActivity : Activity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode != permissionsRequest) return
         if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-            saveAndSend()
+            continueStart()
         } else {
             toast(getString(R.string.permissions_needed))
         }
@@ -351,6 +397,7 @@ class CreateSessionActivity : Activity() {
     companion object {
 
         const val EXTRA_SESSION_ID = "session_id"
+        private const val KEY_WAITING_EXACT_ALARM = "waiting_exact_alarm"
 
         private const val UNIT_NONE = 0
         private const val UNIT_MINUTES = 1
