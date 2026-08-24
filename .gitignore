@@ -23,6 +23,7 @@ capturas_demo/
 # Frames de diseño: referencias de trabajo, no forman parte de la app
 frames/
 app/imagenes/frame_*.png
+app/imagenes/form_*.png
 Prompt.txt
 Frame-llegue.excalidraw
 
